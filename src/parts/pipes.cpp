@@ -174,7 +174,6 @@ static void make_skycube(Scene *scene) {
 	
 		Material *mat = face[i]->get_material_ptr();
 		mat->emissive_color = 1.0;
-		add_texture(tex[i]);
 		mat->set_texture(tex[i], TEXTYPE_DIFFUSE);
 		face[i]->set_texture_addressing(TEXADDR_CLAMP);
 		scene->add_object(face[i]);
