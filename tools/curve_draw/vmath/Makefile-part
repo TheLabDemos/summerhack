@@ -1,0 +1,5 @@
+obj +=	vmath/vmath.o\
+		vmath/matrix.o\
+		vmath/vector.o\
+		vmath/quaternion.o\
+		vmath/sphvec.o

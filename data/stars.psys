@@ -1,0 +1,38 @@
+# --- particle system options ---
+# psize: <scalar>  (particle size)
+# psize-r: <scalar> (particle size range, unused currently)
+# life: <scalar> (particle life in seconds)
+# life-r: <scalar> (particle life range)
+# birth-rate: <scalar> (birth rate, particles/sec)
+# birth-rate-r: <scalar> (birth rate range)
+# grav: <vecror3> (gravity vector)
+# shoot: <vector3> (shoot vector, direction AND force)
+# shoot-r: <vector3> (shoot vector range)
+# friction: <scalar> (environment friction multiplier)
+# spawn_off: <vector3> (spawn particles in specified offset from the emitter position)
+# spawn_off-r: <vector3> (range of spawn-offset random vector)
+# tex: <string> (texture filename)
+# color_start: <vector4> (color at time of birth, alpha included)
+# color_end: <vector4> (color at time of death, alpha included)
+# color: <vector4> (specify the same color for start/end)
+# rot: <scalar> (particle rotation in rad/sec)
+# halo: <string> (halo texture filename)
+# halo_size: <scalar> (halo size)
+# halo_rot: <scalar> (halo rotation in rad/sec)
+# big_particles: <boolean> (requirement for big screen-space particles)
+
+psize: 1000.0
+psize-r: 300.0
+life: 6.0
+birth-rate: 10.0
+grav: 0, 0, 0
+shoot: 0, 0, 0
+shoot-r: 0.0, 0.0, 0.0;
+friction: 1.0
+spawn_off: 0, 0, 0
+spawn_off-r: 500, 500, 500
+tex: data/img/psys03.png
+color_start: 0.6, 0.75, 1.0, 1.0
+color_end: 0.8, 0.75, 1.0, 0.0
+glob_rot: 0.0
+rot: 0.0

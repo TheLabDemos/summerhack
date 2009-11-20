@@ -1,0 +1,83 @@
+# 3dengfx demosystem script v1.2
+# ------------------------------
+# format: <time> <command> <part_name> [args]
+# If time has an 's' suffix it's seconds, otherwise milliseconds.
+# For a list of available commands, see the bottom of this file.
+
+# end of titles-start of galaxy flash
+0s		fx flash 36200 400
+
+# end of galaxy fade-out
+0s fx fade 56s 2s <0,0,0,0> 0 <0,0,0,1> 0
+
+# start of temple fade-in
+0s fx fade 58s 2s <0,0,0,1> 0 <0,0,0,0> 0
+
+#end of temple fade-out
+0s fx fade 87s 2s <0,0,0,0> 0 <0,0,0,1> 0
+
+# -- demo sequence --
+0s		rename_part distort zdistort
+0s		start_part	pipes
+36200	end_part	pipes
+36200	start_part	space
+58s		end_part	space
+58s		start_part	temple
+
+65s		start_part	zdistort
+65s		set_rtarget	temple	t0
+71283	set_rtarget	temple	fb
+71283	end_part	zdistort
+
+89s		end_part	temple
+89200	end
+#--------------------
+
+# -----------------
+# command reference
+# -----------------
+#
+# start_part <part>
+#		starts the specified demo-part.
+#
+# end_part <part>
+#		ends the specified demo-part.
+#
+# rename_part <part> <new name>
+#		renames a part.
+#		Note: overlapping parts are executed in lexicographical order.
+#
+# set_clear <part> true/false
+#		sets whether the specified part should clear the framebuffer
+#		before starting its graphics update.
+#
+# set_rtarget <part> <target>
+#		changes the render target of the specified part.
+#		<target> must be either fb (for framebuffer) or the name of a
+#		texture	register (t0, t1, t2, t3).
+#
+# fx <effect> <time> <duration> <effect specific arguments> ...
+#		schedules the specified post-processing effect for execution at
+#		the specified time, for the specified duration.
+#		Note: effects may overlapped, in which case are executed in the order
+#		that they are encountered in the demoscript.
+#
+# end
+#		ends the demo...
+#
+# ---------------------------------
+# Post-Processing Effects Reference
+# ---------------------------------
+#
+# neg <start> <duration>
+#		inverse video for the specified time interval.
+#
+# flash <peak-time> <duration> [color]
+#		screen flash, color is optional, default is white.
+#		Note: the flash is sinusoidal, with the peak occuring at the specified time.
+#
+# fade <start> <duration> [color1] [tex1] [color2] [tex2]
+#       crossfade from color/tex 1 to color/tex 2
+#
+# overlay <start> <duration> <texture> [shader]
+#		--- SUBJECT TO CHANGE ---

@@ -1,0 +1,4 @@
+src += src/parts/pipes.cpp \
+		src/parts/space.cpp \
+		src/parts/temple.cpp \
+		src/parts/dist.cpp

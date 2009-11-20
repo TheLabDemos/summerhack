@@ -1,0 +1,12 @@
+#!/bin/sh
+
+tmpfile=/tmp/find_tex_tmp_file
+files=`find . -name '*.cpp'`
+
+cat /dev/null >$tmpfile
+for i in $files; do
+	grep '".*"' $i | egrep '(jpg|png)' | \
+	sed 's/.*[(,\, ,\t]"//g' | sed 's/"[),\,,].*//g' >>$tmpfile
+done
+
+cat $tmpfile | sort | uniq
