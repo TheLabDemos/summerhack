@@ -6,7 +6,7 @@ was writing back then with the help of Michael Georgoulopoulos, and which was
 hosted at: http://engfx3d.berlios.de (which has since gone off-line, see
 archived: https://web.archive.org/web/20060210131739/http://engfx3d.berlios.de )
 
-![screenshot](http://nuclear.mutantstargoat.com/sw/demos/shots/summerhack-thelab.jpg)
+![screenshot](http://nuclear.mutantstargoat.com/sw/demos/shots/summerhack-thumb.jpg)
 
 Pouet page: http://www.pouet.net/prod.php?which=18823
 
