@@ -1,0 +1,7 @@
+*.o
+*.swp
+*.d
+*.a
+*.so*
+sumhack-thelab
+data/

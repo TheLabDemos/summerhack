@@ -4,33 +4,22 @@ bin = sumhack-thelab
 include src/parts/Makefile-part
 include src/sdlvf/Makefile-part
 
+
 obj = $(src:.cpp=.o) $(csrc:.c=.o)
 
 opt = -O1
 opt = -g
-CXXFLAGS = -ansi -pedantic -Wall $(opt) -Isrc/3dengfx/src `src/3dengfx/3dengfx-config --cflags`
-CFLAGS = -std=c89 -pedantic -Wall $(opt) `src/3dengfx/3dengfx-config --cflags`
-libs = src/3dengfx/lib3dengfx.a `src/3dengfx/3dengfx-config --libs-no-3dengfx` -lGL -lvorbisfile
+CXXFLAGS = -ansi -pedantic -Wall $(opt) -Isrc/3dengfx/src -MMD `sdl-config --cflags`
+CFLAGS = -std=c89 -pedantic -Wall $(opt) -MMD `sdl-config --cflags`
+libs = src/3dengfx/lib3dengfx.a `sdl-config --libs` -lGL -lvorbisfile -ljpeg -lpng -lz
 
-$(bin): $(obj) src/3dengfx/lib3dengfx.a data/tex_list
+$(bin): $(obj) src/3dengfx/lib3dengfx.a
 	$(CXX) -o $@ $(obj) $(libs)
 
 src/3dengfx/lib3dengfx.a:
-	cd src/3dengfx;\
-	./configure --with-gfxlib=sdl --disable-ft --enable-opt --disable-debug && make
-
-data/tex_list: $(src)
-	tools/find_textures >$@
+	$(MAKE) -C src/3dengfx
 
 -include $(obj:.o=.d)
-
-%.d: %.cpp
-	@set -e; rm -f $@; $(CXX) -MM $(CXXFLAGS) $< > $@.$$$$; \
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; rm -f $@.$$$$
-
-%.d: %.c
-	@set -e; rm -f $@; $(CC) -MM $(CFLAGS) $< > $@.$$$$; \
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; rm -f $@.$$$$
 
 .PHONY: clean
 clean:
@@ -38,4 +27,4 @@ clean:
 
 .PHONY: cleandep
 cleandep:
-	find src \( -name '*.d' -o -name '*.d.*' \) -exec $(RM) '{}' ';'
+	$(RM) $(obj:.o=.d)
