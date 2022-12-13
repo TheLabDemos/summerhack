@@ -51,6 +51,7 @@ void *load_png(FILE *fp, unsigned long *xsz, unsigned long *ysz) {
 	png_info *info_ptr;
 	int i;
 	uint32_t **lineptr, *pixels;
+	uint32_t width, height;
 	int channel_bits, color_type, ilace_type, compression, filtering;
 	
 	if(!(png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0))) {
@@ -75,7 +76,9 @@ void *load_png(FILE *fp, unsigned long *xsz, unsigned long *ysz) {
 	
 	png_read_png(png_ptr, info_ptr, PNG_TRANSFORM_BGR, 0);
 		
-	png_get_IHDR(png_ptr, info_ptr, xsz, ysz, &channel_bits, &color_type, &ilace_type, &compression, &filtering);
+	png_get_IHDR(png_ptr, info_ptr, &width, &height, &channel_bits, &color_type, &ilace_type, &compression, &filtering);
+	*xsz = width;
+	*ysz = height;
 	pixels = malloc(*xsz * *ysz * sizeof(uint32_t));
 	
 	lineptr = (uint32_t**)png_get_rows(png_ptr, info_ptr);

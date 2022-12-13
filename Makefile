@@ -13,10 +13,11 @@ CXXFLAGS = -ansi -pedantic -Wall $(opt) -Isrc/3dengfx/src -MMD `sdl-config --cfl
 CFLAGS = -std=c89 -pedantic -Wall $(opt) -MMD `sdl-config --cflags`
 libs = src/3dengfx/lib3dengfx.a `sdl-config --libs` -lGL -lvorbisfile -ljpeg -lpng -lz
 
-$(bin): $(obj) src/3dengfx/lib3dengfx.a
+$(bin): $(obj) 3dengfx
 	$(CXX) -o $@ $(obj) $(libs)
 
-src/3dengfx/lib3dengfx.a:
+.PHONY: 3dengfx
+3dengfx:
 	$(MAKE) -C src/3dengfx
 
 -include $(obj:.o=.d)
