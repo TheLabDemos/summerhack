@@ -532,35 +532,23 @@ bool Scene::render_all_cube_maps(unsigned long msec) const {
 	while(iter != objects.end()) {
 		Object *obj = *iter++;
 
-		Texture *env;
 		Material *mat = obj->get_material_ptr();
+		Texture *env = mat->get_texture(TEXTYPE_ENVMAP);
+		if(!env || env->get_type() != TEX_CUBE) continue;
+
 		RenderParams rp = obj->get_render_params();
 		if(rp.hidden) continue;
 
 		// if it is marked as a non-automatically updated reflection map, skip it.
-		if(!mat->auto_refl) {
-			continue;
+		if(mat->auto_refl) {
+			if(mat->auto_refl_upd > 1 && frame_count % mat->auto_refl_upd) continue;
+		} else {
+			if(!first_render) continue;
 		}
 
-		// if auto-reflect is set for updating every nth frame,
-		// and this is not one of them, skip it.
-		if(mat->auto_refl_upd > 1 && frame_count % mat->auto_refl_upd) {
-			continue;
-		}
-		
-		// if auto-reflect is set to update only during the first frame,
-		// and this is not the first frame, skip it.
-		if(mat->auto_refl_upd == 0 && !first_render) {
-			continue;
-		}
-		
 		// ... otherwise, update the reflection in the cubemap.
-		if((env = mat->get_texture(TEXTYPE_ENVMAP))) {
-			if(env->get_type() == TEX_CUBE) {
-				did_some = true;
-				render_cube_map(obj, msec);
-			}
-		}
+		did_some = true;
+		render_cube_map(obj, msec);
 	}
 
 	return did_some;
