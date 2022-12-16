@@ -159,7 +159,7 @@ ParticleSysParams::ParticleSysParams() {
 
 
 ParticleSystem::ParticleSystem(const char *fname) {
-	timeslice = 1.0 / 50.0;
+	timeslice = 1.0 / 30.0;
 	SysCaps sys_caps = get_system_capabilities();
 	/* XXX: My Radeon Mobility 9000 supports point sprites but does not say so
 	 * in the extension string, it only has point params there. So I changed this
