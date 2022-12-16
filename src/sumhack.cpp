@@ -91,7 +91,7 @@ bool init() {
 		SDL_ShowCursor(0);
 	}
 
-	fxwt::set_window_title("The Lab Demos :: Summer Hack");
+	fxwt::set_window_title("The Lab Demos :: Summer Hack (rebuild)");
 	fxwt::set_display_handler(update_gfx);
 	fxwt::set_idle_handler(update_gfx);
 	fxwt::set_keyboard_handler(key_handler);
