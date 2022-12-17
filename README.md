@@ -2,9 +2,10 @@ Summerhack / The Lab
 ====================
 Summerhack was a short and sweet demo I've written during the summer of 2005
 for a random on-line competition. Mainly it was a showcase of the 3D engine I
-was writing back then with the help of Michael Georgoulopoulos, and which was
+was writing back then with the help of Michael Georgoulopoulos: 3dengfx, and which was
 hosted at: http://engfx3d.berlios.de (which has since gone off-line, see
-archived: https://web.archive.org/web/20060210131739/http://engfx3d.berlios.de )
+archived: https://web.archive.org/web/20060210131739/http://engfx3d.berlios.de ).
+You can find the last version of 3dengfx at: https://github.com/jtsiomb/3dengfx
 
 ![screenshot](http://nuclear.mutantstargoat.com/sw/demos/shots/summerhack-thumb.jpg)
 
@@ -20,14 +21,7 @@ Credits
  - Demo code: John Tsiombikas (Nuclear)
  - 3D engine code: John Tsiombikas (Nuclear) and Michael Georgoulopoulos (Samurai)
  - Sound code: Vasilis Vasaitis (Savvy)
- - Music: Giannis Troumpadakis
-
-
-Issues
-------
-Depends on some unspecified version of 3dengfx, which is currently hard to
-get, build, and install prior to building this demo. I think it would be best to
-pull all the pieces together into this repository at some point.
+ - Music: Red Herring by Union Jack
 
 
 Original readme file
