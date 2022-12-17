@@ -89,7 +89,7 @@ void DistFx::draw_part() {
 	}
 	
 	// draw
-	set_matrix(XFORM_TEXTURE, Matrix4x4::identity_matrix);
+	set_matrix(XFORM_TEXTURE, dsys::tex_mat[0]);
 	load_xform_matrices();
 
 	glMatrixMode(GL_MODELVIEW);
