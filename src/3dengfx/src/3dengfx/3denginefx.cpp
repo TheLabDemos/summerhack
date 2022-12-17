@@ -154,7 +154,7 @@ namespace engfx_state {
 using namespace engfx_state;
 
 GraphicsInitParameters *load_graphics_context_config(const char *fname) {
-	static GraphicsInitParameters gip;	
+	static GraphicsInitParameters gip;
 	gip.x = 640;
 	gip.y = 480;
 	gip.bpp = 16;
@@ -166,10 +166,10 @@ GraphicsInitParameters *load_graphics_context_config(const char *fname) {
 		error("%s: could not load config file", __func__);
 		return 0;
 	}
-	
+
 	const ConfigOption *cfgopt;
 	while((cfgopt = get_next_option())) {
-		
+
 		if(!strcmp(cfgopt->option, "fullscreen")) {
 			if(!strcmp(cfgopt->str_value, "true")) {
 				gip.fullscreen = true;
@@ -180,20 +180,26 @@ GraphicsInitParameters *load_graphics_context_config(const char *fname) {
 				return 0;
 			}
 		} else if(!strcmp(cfgopt->option, "resolution")) {
-			if(!isdigit(cfgopt->str_value[0])) {
-				error("%s: error parsing config file %s", __func__, fname);
-				return 0;
+			if(!strcmp(cfgopt->str_value, "dontcare")) {
+				gip.x = 1024;
+				gip.y = 768;
+				gip.dont_care_flags |= DONT_CARE_SIZE;
+			} else {
+				if(!isdigit(cfgopt->str_value[0])) {
+					error("%s: error parsing config file %s", __func__, fname);
+					return 0;
+				}
+				gip.x = atoi(cfgopt->str_value);
+
+				char *ptr = cfgopt->str_value;
+				while(*ptr && *ptr != 'x') ptr++;
+				if(!*ptr || !*(ptr+1) || !isdigit(*(ptr+1))) {
+					error("%s: error parsing config file %s", __func__, fname);
+					return 0;
+				}
+
+				gip.y = atoi(ptr + 1);
 			}
-			gip.x = atoi(cfgopt->str_value);
-			
-			char *ptr = cfgopt->str_value;
-			while(*ptr && *ptr != 'x') *ptr++;
-			if(!*ptr || !*(ptr+1) || !isdigit(*(ptr+1))) {
-				error("%s: error parsing config file %s", __func__, fname);
-				return 0;
-			}
-			
-			gip.y = atoi(ptr + 1);
 		} else if(!strcmp(cfgopt->option, "bpp")) {
 			if(cfgopt->flags & CFGOPT_INT) {
 				gip.bpp = cfgopt->int_value;
@@ -203,7 +209,7 @@ GraphicsInitParameters *load_graphics_context_config(const char *fname) {
 			} else {
 				error("%s: error parsing config file %s", __func__, fname);
 				return 0;
-			}			
+			}
 		} else if(!strcmp(cfgopt->option, "zbuffer")) {
 			if(cfgopt->flags & CFGOPT_INT) {
 				gip.depth_bits = cfgopt->int_value;
@@ -1014,7 +1020,7 @@ void use_vertex_colors(bool enable) {
 void set_render_target(Texture *tex, CubeMapFace cube_map_face) {
 	static std::stack<Texture*> rt_stack;
 	static std::stack<CubeMapFace> face_stack;
-	
+
 	Texture *prev = rt_stack.empty() ? 0 : rt_stack.top();
 	CubeMapFace prev_face = CUBE_MAP_PX; // just to get rid of the uninitialized var warning
 	if(!face_stack.empty()) prev_face = face_stack.top();
@@ -1025,7 +1031,7 @@ void set_render_target(Texture *tex, CubeMapFace cube_map_face) {
 		set_texture(0, prev);
 		glCopyTexSubImage2D(prev->get_type() == TEX_CUBE ? prev_face : GL_TEXTURE_2D, 0, 0, 0, 0, 0, prev->width, prev->height);
 	}
-	
+
 	if(!tex) {
 		rt_stack.pop();
 		if(prev->get_type() == TEX_CUBE) {
@@ -1193,20 +1199,21 @@ Matrix4x4 get_matrix(TransformType xform_type, int num) {
 	switch(xform_type) {
 	case XFORM_WORLD:
 		return world_matrix;
-		
+
 	case XFORM_VIEW:
 		return view_matrix;
-		
+
 	case XFORM_TEXTURE:
 		return tex_matrix[num];
-		
+
 	case XFORM_PROJECTION:
 	default:
 		return proj_matrix;
 	}
 }
 
-void set_viewport(unsigned int x, unsigned int y, unsigned int xsize, unsigned int ysize) {
+void set_viewport(unsigned int x, unsigned int y, unsigned int xsize, unsigned int ysize)
+{
 	glViewport(x, y, xsize, ysize);
 }
 

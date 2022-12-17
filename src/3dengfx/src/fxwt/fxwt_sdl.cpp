@@ -59,6 +59,11 @@ void fxwt::set_window_title(const char *title) {
 	SDL_WM_SetCaption(title, 0);
 }
 
+void fxwt::show_cursor(bool show)
+{
+	SDL_ShowCursor(show ? 1 : 0);
+}
+
 void fxwt::swap_buffers() {
 	SDL_GL_SwapBuffers();
 #if defined(_POSIX_PRIORITY_SCHEDULING)
@@ -70,7 +75,7 @@ void fxwt::swap_buffers() {
 
 int fxwt::main_loop() {
 	set_verbosity(3);
-	
+
 	SDL_EnableKeyRepeat(300, 20);
 
 	while(1) {

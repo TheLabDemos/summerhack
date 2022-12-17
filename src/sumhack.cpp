@@ -88,7 +88,7 @@ bool init() {
 	}
 
 	if(gip->fullscreen) {
-		SDL_ShowCursor(0);
+		fxwt::show_cursor(false);
 	}
 
 	fxwt::set_window_title("The Lab Demos :: Summer Hack (rebuild)");
@@ -145,18 +145,18 @@ bool init() {
 	
 	timer_reset(&timer);
 	timer_start(&timer);
-	
+
 	return true;
 }
 
 void clean_up() {
 	unsigned long time = timer_getmsec(&timer);
-	
+
 	if(music) {
 		sdlvf_done();
 	}
 
-	SDL_ShowCursor(1);
+	fxwt::show_cursor(true);
 
 	for(size_t i=0; i<parts.size(); i++) {
 		delete parts[i];

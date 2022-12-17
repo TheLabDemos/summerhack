@@ -33,6 +33,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "3dengfx/3denginefx.hpp"
 #include "common/err_msg.h"
 
+#define GOOD_ASPECT(x)	((x) > 1.1f && (x) < 2.0f)
+
 bool fxwt::init_graphics(GraphicsInitParameters *gparams) {
 	info("Initializing SDL");
 
@@ -41,24 +43,49 @@ bool fxwt::init_graphics(GraphicsInitParameters *gparams) {
 		return false;
 	}
 
-	if(!gparams->fullscreen) {
-		const SDL_VideoInfo *vid_inf = SDL_GetVideoInfo();
+	char driver[128];
+	SDL_VideoDriverName(driver, sizeof driver);
+	info("SDL video driver: %s", driver);
+
+	const SDL_VideoInfo *vid_inf = SDL_GetVideoInfo();
+	if(gparams->fullscreen) {
+		if(gparams->dont_care_flags & DONT_CARE_SIZE) {
+			int curx = vid_inf->current_w;
+			int cury = vid_inf->current_h;
+			float aspect = (float)curx / cury;
+
+			if(!GOOD_ASPECT(aspect)) {
+				SDL_Rect **modes = SDL_ListModes(0, SDL_OPENGL | SDL_FULLSCREEN);
+				info("Current mode %dx%d sounds like multi-monitor. Available modes:", curx, cury);
+				for(int i=0; modes[i]; i++) {
+					info("  %dx%d", modes[i]->w, modes[i]->h);
+					aspect = (float)modes[i]->w / modes[i]->h;
+					if(GOOD_ASPECT(aspect) && (modes[i]->w == vid_inf->current_w || modes[i]->h == vid_inf->current_h)) {
+						curx = modes[i]->w;
+						cury = modes[i]->h;
+					}
+				}
+			}
+			gparams->x = curx;
+			gparams->y = cury;
+		}
+	} else {
 		gparams->bpp = vid_inf->vfmt->BitsPerPixel;
 	}
 
 	info("Trying to set video mode %dx%dx%d, d:%d s:%d %s", gparams->x, gparams->y, gparams->bpp, gparams->depth_bits, gparams->stencil_bits, gparams->fullscreen ? "fullscreen" : "windowed");
-	
+
 	int rbits, gbits, bbits;
 	switch(gparams->bpp) {
 	case 32:
 		rbits = gbits = bbits = 8;
 		break;
-		
+
 	case 16:
 		rbits = bbits = 5;
 		gbits = 6;
 		break;
-		
+
 	default:
 		error("%s: Tried to set unsupported pixel format: %d bpp", __func__, gparams->bpp);
 		return false;
@@ -76,7 +103,7 @@ bool fxwt::init_graphics(GraphicsInitParameters *gparams) {
 	if(!SDL_SetVideoMode(gparams->x, gparams->y, gparams->bpp, flags)) {
 		if(gparams->depth_bits == 32) gparams->depth_bits = 24;
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, gparams->depth_bits);
-		
+
 		if(!SDL_SetVideoMode(gparams->x, gparams->y, gparams->bpp, flags)) {
 			error("%s: Could not set requested video mode", __func__);
 		}
@@ -104,11 +131,11 @@ bool fxwt::init_graphics(GraphicsInitParameters *gparams) {
 		error("%s: Could not set requested exact bpp mode", __func__);
 		return false;
 	}
-	
-	// now if we don't have DONT_CARE_DEPTH in the dont_care_flags check for 
+
+	// now if we don't have DONT_CARE_DEPTH in the dont_care_flags check for
 	// exact depth buffer format, however consider 24 and 32 bit the same
 	if(!(gparams->dont_care_flags & DONT_CARE_DEPTH) && azbits != gparams->depth_bits) {
-		if(!(gparams->depth_bits == 32 && azbits == 24 || gparams->depth_bits == 24 && azbits == 32)) {
+		if(!((gparams->depth_bits == 32 && azbits == 24) || (gparams->depth_bits == 24 && azbits == 32))) {
 			error("%s: Could not set requested exact zbuffer depth", __func__);
 			return false;
 		}

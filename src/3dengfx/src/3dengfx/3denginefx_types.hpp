@@ -139,6 +139,7 @@ class GfxProg;
 #define DONT_CARE_BPP		1	// 0001
 #define DONT_CARE_DEPTH		2	// 0010
 #define DONT_CARE_STENCIL	4	// 0100
+#define DONT_CARE_SIZE		8
 
 struct GraphicsInitParameters {
 	int x, y;

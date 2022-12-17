@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #ifdef USING_3DENGFX
 #include "3dengfx/3denginefx.hpp"
+#include "fxwt/fxwt.hpp"
 #endif	// USING_3DENGFX
 
 FrustumPlane::FrustumPlane() {
@@ -62,7 +63,11 @@ BaseCamera::BaseCamera(const Vector3 &trans, const Quaternion &rot) {
 	fov = quarter_pi;
 	near_clip = 1.0;
 	far_clip = 10000.0;
-	aspect = 1.33333;
+#ifdef USING_3DENGFX
+	aspect = (float)fxwt::screenx / fxwt::screeny;
+#else
+	aspect = 1.33333333;
+#endif
 	flip_view.x = flip_view.y = flip_view.z = false;
 }
 

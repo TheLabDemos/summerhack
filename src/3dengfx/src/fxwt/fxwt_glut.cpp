@@ -64,6 +64,11 @@ void fxwt::set_window_title(const char *title) {
 	glutSetWindowTitle(title);
 }
 
+void fxwt::show_cursor(bool show)
+{
+	glutSetCursor(show ? GLUT_CURSOR_LEFT_ARROW : GLUT_CURSOR_NONE);
+}
+
 void fxwt::swap_buffers() {
 	glutSetWindow(fxwt_glut_win);
 	glutSwapBuffers();

@@ -47,7 +47,7 @@ namespace fxwt {
 	extern std::list<void (*)(int)> keyb_handlers;
 	extern std::list<void (*)(int, int)> motion_handlers;
 	extern std::list<void (*)(int, int, int, int)> button_handlers;
-	
+
 	extern bool button_state[6];
 	extern int screenx, screeny;
 
@@ -70,8 +70,9 @@ namespace fxwt {
 	Vector2 get_mouse_pos_normalized();
 
 	void set_window_title(const char *title);
+	void show_cursor(bool show);
 	void swap_buffers();
-	
+
 	int main_loop();
 }
 
