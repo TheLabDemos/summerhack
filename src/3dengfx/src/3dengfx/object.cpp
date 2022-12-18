@@ -407,8 +407,8 @@ void Object::render_hack(unsigned long time) {
 
 	if(mat.wireframe) ::set_wireframe(false);
 	if((master_render_mode & RMODE_BLENDING) &&
-			(render_params.handle_blending && mat.alpha < 1.0 - small_number) || 
-			(!render_params.handle_blending && render_params.blending)) {
+			((render_params.handle_blending && mat.alpha < 1.0 - small_number) || 
+			(!render_params.handle_blending && render_params.blending))) {
 		set_alpha_blending(false);
 	}
 	if(!render_params.zwrite) ::set_zwrite(true);
@@ -520,12 +520,9 @@ void Object::setup_bump_light(unsigned long time) {
 	int tcount = mesh.get_triangle_array()->get_count();
 	const Triangle *tptr = mesh.get_triangle_array()->get_data();
 
-	
-	Vector3 *utan = new Vector3[vcount];
-	memset(utan, 0, vcount * sizeof(Vector3));
 
+	Vector3 *utan = new Vector3[vcount];
 	Vector3 *vtan = new Vector3[vcount];
-	memset(vtan, 0, vcount * sizeof(Vector3));
 
 	for(int i=0; i<tcount; i++) {
 		Vertex *v1 = &varray[tptr->vertices[0]];
@@ -537,7 +534,7 @@ void Object::setup_bump_light(unsigned long time) {
 
 		TexCoord tc1(v2->tex[0].u - v1->tex[0].u, v2->tex[0].v - v1->tex[0].v);
 		TexCoord tc2(v3->tex[0].u - v1->tex[0].u, v3->tex[0].v - v1->tex[0].v);
-	
+
 		scalar_t r = 1.0 / (tc1.u * tc2.v - tc2.u * tc1.v);
 		Vector3 udir(	(tc2.v * vec1.x - tc1.v * vec2.x) * r,
 						(tc2.v * vec1.y - tc1.v * vec2.y) * r,
