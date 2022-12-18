@@ -395,8 +395,8 @@ void ParticleSystem::draw() const {
 
 			if(psys_params.billboard_tex) {
 				if(use_psprites) {
-					set_point_sprites(true);
-					set_point_sprite_coords(0, true);
+					set_point_sprites(false);
+					set_point_sprite_coords(0, false);
 				}
 				set_texture_addressing(0, TEXADDR_WRAP, TEXADDR_WRAP);
 				disable_texture_unit(0);
