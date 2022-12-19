@@ -4,7 +4,7 @@ obj = analysis.o bitrate.o block.o codebook.o envelope.o floor0.o floor1.o \
 
 liba = ../libvorbis.a
 
-CFLAGS = -O3 -I.
+CFLAGS = -O3 -I. -I..
 
 $(liba): $(obj)
 	$(AR) rcs $@ $(obj)

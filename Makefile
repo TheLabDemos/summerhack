@@ -9,8 +9,9 @@ obj = $(src:.cpp=.o) $(csrc:.c=.o)
 
 opt = -O1
 opt = -g
-CXXFLAGS = -ansi -pedantic -Wall $(opt) -Isrc/3dengfx/src -MMD `sdl-config --cflags`
-CFLAGS = -std=c89 -pedantic -Wall $(opt) -MMD `sdl-config --cflags`
+incdir = -Isrc/3dengfx/src -Ilibs -Ilibs/png -Ilibs/jpeglib -Ilibs/ogg -Ilibs/vorbis
+CXXFLAGS = -ansi -pedantic -Wall $(opt) $(incdir) -MMD `sdl-config --cflags`
+CFLAGS = -std=c89 -pedantic -Wall $(opt) $(incdir) -MMD `sdl-config --cflags`
 libs = -Llibs src/3dengfx/lib3dengfx.a `sdl-config --libs` -lGL -lvorbis -logg \
 	   -ljpeg -lpng -lz -l3ds
 
