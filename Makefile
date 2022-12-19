@@ -20,11 +20,18 @@ $(bin): $(obj) 3dengfx
 3dengfx:
 	$(MAKE) -C src/3dengfx
 
+.PHONY: 3dengfx-clean
+3dengfx-clean:
+	$(MAKE) -C src/3dengfx clean
+
 -include $(obj:.o=.d)
 
 .PHONY: clean
 clean:
 	$(RM) $(obj) $(bin)
+
+.PHONY: cleanall
+cleanall: clean 3dengfx-clean cleandep
 
 .PHONY: cleandep
 cleandep:
