@@ -32,7 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifdef IMGLIB_USE_PNG
 
 #include <stdlib.h>
-#include <png.h>
+#include "png.h"
 #include "color_bits.h"
 #include "common/types.h"
 
@@ -51,7 +51,7 @@ void *load_png(FILE *fp, unsigned long *xsz, unsigned long *ysz) {
 	png_info *info_ptr;
 	int i;
 	uint32_t **lineptr, *pixels;
-	uint32_t width, height;
+	png_uint_32 width, height;
 	int channel_bits, color_type, ilace_type, compression, filtering;
 	
 	if(!(png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0))) {
@@ -64,8 +64,8 @@ void *load_png(FILE *fp, unsigned long *xsz, unsigned long *ysz) {
 		fclose(fp);
 		return 0;
 	}
-	
-	if(setjmp(png_jmpbuf(png_ptr))) {		
+
+	if(setjmp(png_jmpbuf(png_ptr))) {
 		png_destroy_read_struct(&png_ptr, &info_ptr, 0);
 		fclose(fp);
 		return 0;
