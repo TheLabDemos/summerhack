@@ -11,9 +11,10 @@ opt = -O1
 opt = -g
 CXXFLAGS = -ansi -pedantic -Wall $(opt) -Isrc/3dengfx/src -MMD `sdl-config --cflags`
 CFLAGS = -std=c89 -pedantic -Wall $(opt) -MMD `sdl-config --cflags`
-libs = src/3dengfx/lib3dengfx.a `sdl-config --libs` -lGL -lvorbisfile -ljpeg -lpng -lz
+libs = -Llibs src/3dengfx/lib3dengfx.a `sdl-config --libs` -lGL -lvorbis -logg \
+	   -ljpeg -lpng -lz -l3ds
 
-$(bin): $(obj) 3dengfx
+$(bin): $(obj) 3dengfx libs
 	$(CXX) -o $@ $(obj) $(libs)
 
 .PHONY: 3dengfx
@@ -30,9 +31,17 @@ $(bin): $(obj) 3dengfx
 clean:
 	$(RM) $(obj) $(bin)
 
-.PHONY: cleanall
-cleanall: clean 3dengfx-clean cleandep
+.PHONY: clean-all
+clean-all: clean 3dengfx-clean cleandep clean-libs
 
 .PHONY: cleandep
 cleandep:
 	$(RM) $(obj:.o=.d)
+
+.PHONY: libs
+libs:
+	$(MAKE) -C libs
+
+.PHONY: clean-libs
+clean-libs:
+	$(MAKE) -C libs clean

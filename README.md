@@ -44,3 +44,36 @@ Released under the GPL, do whatever you wish with it.
 Contact info...
 http://thelab.demoscene.gr - nuclear@siggraph.org
 ```
+
+Build instructions
+------------------
+If you acquired the source code from the git repo, it does not include the
+binary data files (images, 3D models, and music). Grab the data file archive
+from: http://nuclear.mutantstargoat.com/sw/demos/summerhack-data.tar.gz and
+extract it in the project root directory, so that you now have the `img`, `geom`
+and `music` subdirectories in the `data` directory.
+
+If you got the source code from a full release archive of the demo, the data
+files are already there. Of course the release archive also contains
+pre-compiled binaries for multiple platforms.
+
+### UNIX
+
+The only dependencies are SDL 1.2 and OpenGL. After installing them, just type
+`make` to build the demo. For example under Debian GNU/Linux:
+
+    sudo apt-get install libgl-dev libsdl1.2-dev
+    make
+
+While on FreeBSD:
+
+    sudo pkg install mesa-libs sdl
+    gmake
+
+### Windows
+
+TODO
+
+### MacOS X
+
+TODO

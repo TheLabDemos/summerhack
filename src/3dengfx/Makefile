@@ -2,7 +2,7 @@ PREFIX = /usr/local
 dbg = -g
 opt = -O1 -ffast-math -fomit-frame-pointer
 
-inc_flags = -Isrc -Ilibs -I/usr/local/include
+inc_flags = -Isrc -I../../libs -I../../libs/zlib -I../../libs/libpng -I../../libs/jpeglib
 warn_flags = -Wall -Wno-sign-compare -Wno-strict-aliasing -Wno-char-subscripts
 
 CXXFLAGS = $(opt) $(dbg) -ansi -pedantic $(warn_flags) -MMD $(inc_flags) \
@@ -17,7 +17,6 @@ include src/dsys/makefile.part
 include src/common/makefile.part
 include src/fxwt/makefile.part
 include src/sim/makefile.part
-include libs/lib3ds/makefile.part
 
 # get all the object files in one variable $(obj)
 obj = $(3dengfx_obj) \
@@ -26,8 +25,7 @@ obj = $(3dengfx_obj) \
 	  $(dsys_obj) \
 	  $(common_obj) \
 	  $(fxwt_obj) \
-	  $(sim_obj) \
-	  $(lib3ds_obj)
+	  $(sim_obj)
 
 lib3dengfx.a: $(obj)
 	$(AR) rcs $@ $(obj)
