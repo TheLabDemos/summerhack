@@ -57,7 +57,7 @@ void dsys::radial_blur(Texture *tex, float ammount, const Vector2 &origin, bool 
 		v2 += origin;
 		
 		float alpha = (float)((quad_count-1) - i) / (float)quad_count;
-		dsys::overlay(tex, v1, v2, Color(1.0f, 1.0f, 1.0f, alpha), false);
+		dsys::overlay(tex, v1, v2, Color(1.0f, 1.0f, 1.0f, alpha), 0, false);
 		scale += dscale;
 	}
 
@@ -122,11 +122,13 @@ void dsys::overlay(Texture *tex, const Vector2 &corner1, const Vector2 &corner2,
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
-	
+
+	float aspect = (float)fxwt::screenx / fxwt::screeny;
+	float offs = (1.333333333f - aspect) / 2.0f;
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	glOrtho(0.0, 1.0, 1.0, 0.0, 0.0, 1.0);
+	glOrtho(offs, 1.0 - offs, 1.0, 0.0, 0.0, 1.0);
 
 	set_lighting(false);
 	set_zbuffering(false);

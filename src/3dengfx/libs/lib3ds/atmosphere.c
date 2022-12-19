@@ -79,7 +79,6 @@ layer_fog_read(Lib3dsLayerFog *fog, Lib3dsIo *io)
 {
   Lib3dsChunk c;
   Lib3dsWord chunk;
-  Lib3dsBool have_lin=LIB3DS_FALSE;
 
   if (!lib3ds_chunk_read_start(&c, LIB3DS_LAYER_FOG, io)) {
     return(LIB3DS_FALSE);
@@ -94,7 +93,6 @@ layer_fog_read(Lib3dsLayerFog *fog, Lib3dsIo *io)
     switch (chunk) {
       case LIB3DS_LIN_COLOR_F:
         lib3ds_io_read_rgb(io, fog->col);
-        have_lin=LIB3DS_TRUE;
         break;
       case LIB3DS_COLOR_F:
         lib3ds_io_read_rgb(io, fog->col);

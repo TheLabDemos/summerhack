@@ -102,6 +102,7 @@ bool init() {
 	//dsys::init();
 
 	// show loading screen
+	glClear(GL_COLOR_BUFFER_BIT);
 	dsys::overlay(get_texture("data/img/loading.jpg"), Vector2(0, 0), Vector2(1, 1), 1.0);
 	flip();
 

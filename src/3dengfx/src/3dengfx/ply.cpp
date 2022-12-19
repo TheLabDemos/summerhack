@@ -28,7 +28,7 @@ enum PropType {
 const size_t prop_size[] = {32, 8, 16, 32, 0};
 
 struct PropTypeMatch {
-	char *symb;
+	const char *symb;
 	PropType type;
 } prop_match[] = {
 	{"float",	PROP_FLOAT},
@@ -68,12 +68,21 @@ struct Ply {
 	vector<Element> elem;
 	FILE *fp;
 	unsigned long header_skip;
+
+	Ply();
 };
 
 static Ply *read_header(FILE *fp);
 static Element *seek_elem(Ply *ply, ElementType elem_type);
 
 static const char *ply_filename = 0;	// for error reports
+
+Ply::Ply()
+{
+	fmt = PLY_ASCII;
+	fp = 0;
+	header_skip = 0;
+}
 
 bool file_is_ply(FILE *file) {
 	char sig[5] = {0};
@@ -205,7 +214,6 @@ static Ply *read_header(FILE *fp) {
 	fseek(fp, 0, SEEK_SET);
 
 	Ply *ply = new Ply;
-	memset(ply, 0, sizeof(Ply));
 
 	bool vertex_ok = false, face_ok = false;
 

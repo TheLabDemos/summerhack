@@ -1226,14 +1226,12 @@ void set_viewport_norm(float x, float y, float xsize, float ysize)
 
 Matrix4x4 create_projection_matrix(scalar_t vfov, scalar_t aspect, scalar_t near_clip, scalar_t far_clip) {
 #ifdef COORD_LHS
-	scalar_t hfov = vfov * aspect;
-	scalar_t w = 1.0f / (scalar_t)tan(hfov * 0.5f);
-	scalar_t h = 1.0f / (scalar_t)tan(vfov * 0.5f);
+	scalar_t f = 1.0f / (scalar_t)tan(vfov * 0.5f);
 	scalar_t q = far_clip / (far_clip - near_clip);
-	
+
 	Matrix4x4 mat;
-	mat[0][0] = w;
-	mat[1][1] = h;
+	mat[0][0] = f / aspect;
+	mat[1][1] = f;
 	mat[2][2] = q;
 	mat[3][2] = 1.0f;
 	mat[2][3] = -q * near_clip;
