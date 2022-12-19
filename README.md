@@ -1,5 +1,8 @@
 Summerhack / The Lab
 ====================
+![GNU/Linux build status](https://github.com/TheLabDemos/summerhack/actions/workflows/build_gnulinux.yml/badge.svg)
+![FreeBSD build status](https://github.com/TheLabDemos/summerhack/actions/workflows/build_freebsd.yml/badge.svg)
+
 Summerhack was a short and sweet demo I've written during the summer of 2005
 for a random on-line competition. Mainly it was a showcase of the 3D engine I
 was writing back then with the help of Michael Georgoulopoulos: 3dengfx, and which was

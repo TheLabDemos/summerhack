@@ -1,0 +1,45 @@
+name: GNU/Linux build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: cache datafiles
+      id: cache-data
+      uses: actions/cache@v3
+      with:
+        path: data
+        key: data-cache1
+
+    - name: install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install libgl-dev libglu1-mesa-dev libsdl1.2-dev
+
+    - name: download datafiles
+      run: |
+        wget http://nuclear.mutantstargoat.com/sw/demos/summerhack-data.tar.gz
+        tar xzvf summerhack-data.tar.gz
+
+    - name: build demo
+      run: make
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: summerhack-gnulinux
+        path: |
+          data/
+          sumhack-thelab
+          3dengfx.conf
+          demoscript
+
+# vi:ts=2 sts=2 sw=2 expandtab:

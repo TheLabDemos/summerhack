@@ -1,0 +1,45 @@
+name: FreeBSD build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: macos-12
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: cache datafiles
+      id: cache-data
+      uses: actions/cache@v3
+      with:
+        path: data
+        key: data-cache1
+
+        
+    - name: download datafiles
+      run: |
+        wget http://nuclear.mutantstargoat.com/sw/demos/summerhack-data.tar.gz
+        tar xzvf summerhack-data.tar.gz
+
+    - name: FreeBSD build
+      uses: vmactions/freebsd-vm@v0
+      with:
+        run: |
+          pkg install -y gmake mesa-libs sdl
+          gmake
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: summerhack-freebsd
+        path: |
+          data/
+          sumhack-thelab
+          3dengfx.conf
+          demoscript
+
+# vi:ts=2 sts=2 sw=2 expandtab:
