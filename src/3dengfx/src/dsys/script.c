@@ -174,7 +174,7 @@ void free_command(DemoCommand *cmd) {
 	for(i=0; i<cmd->argc; i++) {
 		free((void*)cmd->argv[i]);
 	}
-	free(cmd->argv);
+	free((void*)cmd->argv);
 }
 
 long str_to_time(const char *str) {

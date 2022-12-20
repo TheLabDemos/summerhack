@@ -73,9 +73,23 @@ While on FreeBSD:
     sudo pkg install mesa-libs sdl
     gmake
 
-### Windows
+### Windows (MSVC)
 
-TODO
+The sticking point with compiling on windows, especially with MSVC, is how to
+handle dependencies. OpenGL is not an issue, but SDL must be installed and the
+compiler/linker needs to be informed of its location.
+
+For new versions of MS Visual C++ (2015 or later), use vcpkg to install SDL 1.2.
+It should work automatically.
+
+For older versions of MSVC, download the pre-compiled SDL 1.2 package:
+https://libsdl.org/release/SDL-devel-1.2.15-VC.zip
+and unzip it in the libs directory of summerhack (so that the directory
+`libs\SDL-1.2.15` exists).
+
+Once SDL is taken care of, simply open the `summerhack.sln` project and hit F7
+(Build->Build Solution).
+
 
 ### MacOS X
 

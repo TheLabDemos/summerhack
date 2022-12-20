@@ -26,6 +26,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * 		John Tsiombikas 2005
  */
 
+#include <time.h>
 #include <float.h>
 #include "3dengfx_config.h"
 #include "gfx/curves.hpp"

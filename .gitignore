@@ -5,3 +5,14 @@
 *.so*
 sumhack-thelab
 data/
+*.suo
+*.user
+*.log
+*.zip
+*.tar.gz
+Debug/
+Release/
+*.ncb
+*.exe
+*.dll
+libs/SDL-1.2.15/
