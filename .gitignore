@@ -15,4 +15,7 @@ Release/
 *.ncb
 *.exe
 *.dll
+*.txt
+*.htm
+.vs/
 libs/SDL-1.2.15/
