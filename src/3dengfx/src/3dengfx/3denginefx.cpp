@@ -214,7 +214,7 @@ GraphicsInitParameters *load_graphics_context_config(const char *fname) {
 			if(cfgopt->flags & CFGOPT_INT) {
 				gip.depth_bits = cfgopt->int_value;
 			} else if(!strcmp(cfgopt->str_value, "dontcare")) {
-				gip.depth_bits = 32;
+				gip.depth_bits = 24;
 				gip.dont_care_flags |= DONT_CARE_DEPTH;
 			} else {
 				error("%s: error parsing config file %s", __func__, fname);
