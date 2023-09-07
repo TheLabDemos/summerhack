@@ -20,6 +20,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #ifndef _OPENGL_H_
 #define _OPENGL_H_
 
+#if defined(ANDROID) || defined(__ANDROID__)
+#include <GLES/gl.h>
+
+#define BUILD_GLES1
+
+#define glClearDepth	glClearDepthf
+
+#else
+/* desktop build */
+
 #if defined(WIN32) || defined(__WIN32__)
 #define WIN32_LEAN_AND_MEAN	1
 #include <windows.h>
@@ -95,7 +105,7 @@ namespace glext {
 #endif	/* GL_ARB_point_parameters */
 
 	/* --- OpenGL 2.0 Shading Language --- */
-	
+
 #ifdef GL_ARB_shader_objects
 	extern PFNGLDELETEOBJECTARBPROC glDeleteObject;
 	extern PFNGLATTACHOBJECTARBPROC glAttachObject;
@@ -123,5 +133,7 @@ namespace glext {
 #endif	/* GL_ARB_shader_objects */
 
 }
+
+#endif	/* desktop build */
 
 #endif	/* _OPENGL_H_ */

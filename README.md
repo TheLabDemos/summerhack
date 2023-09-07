@@ -79,17 +79,26 @@ The sticking point with compiling on windows, especially with MSVC, is how to
 handle dependencies. OpenGL is not an issue, but SDL must be installed and the
 compiler/linker needs to be informed of its location.
 
-For new versions of MS Visual C++ (2015 or later), use vcpkg to install SDL 1.2.
-It should work automatically.
-
 For older versions of MSVC, download the pre-compiled SDL 1.2 package:
 https://libsdl.org/release/SDL-devel-1.2.15-VC.zip
 and unzip it in the libs directory of summerhack (so that the directory
 `libs\SDL-1.2.15` exists).
 
+For new versions of MS Visual C++ (2015 or later), use `vcpkg install sdl1` to
+install SDL 1.2. vcpkg does not seem to put the `include/SDL` directory in the
+include path, so you might need to change all `#include <SDL.h>` lines to
+`#include <SDL/SDL.h>`. I can't be bothered to figure out a solution that works
+both with and without `vcpkg` at the moment.
+
 Once SDL is taken care of, simply open the `summerhack.sln` project and hit F7
 (Build->Build Solution).
 
+
+### Windows (msys2/mingw32)
+
+Use the mingw32 environment to build summerhack. Simply install SDL with the
+pacman package manager: `pacman -S mingw-w64-i686-SDL`, and type `make` to
+build.
 
 ### MacOS X
 

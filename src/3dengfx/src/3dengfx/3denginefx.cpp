@@ -87,7 +87,7 @@ namespace glext {
 	PFNGLPOINTPARAMETERFVARBPROC glPointParameterfv;
 
 	// --- OpenGL 2.0 Shading Language ---
-	
+
 	// - objects
 	PFNGLDELETEOBJECTARBPROC glDeleteObject;
 	PFNGLATTACHOBJECTARBPROC glAttachObject;

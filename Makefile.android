@@ -1,0 +1,163 @@
+# ---- set these as environment variables if different ----
+SDK ?= /usr/lib/android-sdk
+NDK ?= /usr/lib/android-ndk
+AVER ?= 23
+# ---------------------------------------------------------
+
+sys = $(shell uname -s | sed 's/MINGW.*/mingw/')
+ifeq ($(sys), Linux)
+	host = linux-x86_64
+endif
+ifeq ($(sys), mingw)
+	host = windows-x86_64
+endif
+
+CCSYSROOT = --sysroot=$(NDK)/sysroot
+LDSYSROOT64 = --sysroot=$(NDK)/platforms/android-$(AVER)/arch-arm64
+LDSYSROOT32 = --sysroot=$(NDK)/platforms/android-$(AVER)/arch-arm
+PLATFORM_JAR = $(SDK)/platforms/android-$(AVER)/android.jar
+TCPATH = $(NDK)/toolchains/llvm/prebuilt/$(host)/bin
+TC64 = $(TCPATH)/aarch64-linux-android$(AVER)-
+TC32 = $(TCPATH)/armv7a-linux-androideabi$(AVER)-
+
+src = $(wildcard src/*.cpp) $(wildcard src/parts/*.cpp)
+csrc = $(wildcard src/android/*.c)
+obj64 = $(csrc:.c=.arm64.o) $(src:.cpp=.arm64.o)
+obj32 = $(csrc:.c=.arm32.o) $(src:.cpp=.arm32.o)
+dep = $(csrc:.c=.d) $(src:.cpp=.d)
+name = summerhack
+lib_so = lib$(name).so
+so64 = lib$(name)64.so
+so32 = lib$(name)32.so
+
+pkgprefix = com.mutantstargoat
+pkg = $(pkgprefix).$(name)
+act = android.app.NativeActivity
+
+warn = -pedantic -Wall
+dbg = -g
+opt = -O3 -ffast-math -fno-strict-aliasing
+def = -DGLDEF
+incdir = -Isrc -Isrc/3dengfx/src -Ilibs
+libdir64 = -Llibs/android64
+libdir32 = -Llibs/android32
+
+CFLAGS = $(CCSYSROOT) $(ISYS) $(warn) $(dbg) $(opt) $(def) $(incdir) -fPIC -fcommon -MMD
+CXXFLAGS = $(CCSYSROOT) $(ISYS) $(warn) $(dbg) $(opt) $(def) $(incdir) -fPIC -fcommon -MMD
+LDFLAGS = $(LDSYSROOT) -pthread -lm -landroid -llog -lEGL -lGLES -limago -lpsys \
+		  -lanim -ltreestore -lminiaudio
+
+$(name).apk: $(name).aligned.apk keystore.jks
+	apksigner sign --ks keystore.jks --ks-key-alias androidkey --ks-pass pass:android --key-pass pass:android --out $@ $<
+
+keystore.jks:
+	keytool -genkeypair -keystore $@ -alias androidkey -validity 10000 \
+		-keyalg RSA -keysize 2048 -storepass android -keypass android \
+		-dname "cn=John Tsiombikas, o=Mindlapse, c=GR"
+
+$(name).aligned.apk: $(name).unsigned.apk
+	zipalign -f -p 4 $< $@
+
+$(name).unsigned.apk: $(so64) $(so32) AndroidManifest.xml $(icons)
+	rm -f apkbuild/lib/arm64-v8a/* apkbuild/lib/armeabi-v7a/* apkbuild/lib/armeabi/*
+	rm -f apkbuild/assets/data/* apkbuild/assets/sdr/*
+	mkdir -p apkbuild/lib/arm64-v8a apkbuild/lib/armeabi-v7a apkbuild/lib/armeabi
+	cp $(so64) apkbuild/lib/arm64-v8a/$(lib_so)
+	cp $(so32) apkbuild/lib/armeabi-v7a/$(lib_so)
+	cp $(so32) apkbuild/lib/armeabi/$(lib_so)
+	mkdir -p apkbuild/assets/data apkbuild/assets/sdr
+	cp -r data/* apkbuild/assets/data
+	cp -r sdr/* apkbuild/assets/sdr
+	[ -f demo.cfg ] && cp demo.cfg apkbuild/assets || rm -f apkbuild/assets/demo.cfg
+	mkdir -p apkbuild/res/drawable-xxhdpi apkbuild/res/drawable-xxxhdpi
+	mkdir -p apkbuild/res/drawable-xhdpi apkbuild/res/drawable-hdpi
+	mkdir -p apkbuild/res/drawable-mdpi apkbuild/res/drawable-ldpi
+	cp data/icon192.png apkbuild/res/drawable-xxxhdpi/ic_launcher.png
+	cp data/icon144.png apkbuild/res/drawable-xxhdpi/ic_launcher.png
+	cp data/icon96.png apkbuild/res/drawable-xhdpi/ic_launcher.png
+	cp data/icon72.png apkbuild/res/drawable-hdpi/ic_launcher.png
+	cp data/icon48.png apkbuild/res/drawable-mdpi/ic_launcher.png
+	cp data/icon36.png apkbuild/res/drawable-ldpi/ic_launcher.png
+	aapt package -f -F $@ -I $(PLATFORM_JAR) -M AndroidManifest.xml -S apkbuild/res apkbuild
+
+$(so64): $(obj64) 3dengfx libs Makefile.android libs
+	$(TC64)clang++ -o $@ -shared -Wl,-soname,$(lib_so) $(obj64) $(libdir64) $(LDFLAGS)
+
+$(so32): $(obj32) 3dengfx libs Makefile.android libs
+	$(TC32)clang++ -o $@ -shared -Wl,-soname,$(lib_so) $(obj32) $(libdir32) $(LDFLAGS)
+
+-include $(dep)
+
+%.arm64.o: %.c
+	$(TC64)clang -o $@ $(CFLAGS) -c $<
+
+%.arm32.o: %.c
+	$(TC32)clang -o $@ $(CFLAGS) -c $<
+
+%.arm64.o: %.cpp
+	$(TC64)clang++ -o $@ $(CXXFLAGS) -c $<
+
+%.arm32.o: %.cpp
+	$(TC32)clang++ -o $@ $(CXXFLAGS) -c $<
+
+.PHONY: 3dengfx
+3dengfx:
+	$(MAKE) -C src/3dengfx
+
+.PHONY: 3dengfx-clean
+3dengfx-clean:
+	$(MAKE) -C src/3dengfx clean
+
+.PHONY: clean
+clean:
+	rm -f $(obj64) $(obj32) $(lib_so)
+
+.PHONY: cleandep
+cleandep:
+	rm -f $(dep)
+
+.PHONY: clean-all
+clean-all: clean 3dengfx-clean cleandep clean-libs
+
+
+.PHONY: libs
+libs: libs64 libs32
+
+.PHONY: libs64
+libs64:
+	$(MAKE) CC=$(TC64)clang CXX=$(TC64)clang++ sys=android-arm64 -C libs
+
+.PHONY: libs32
+libs32:
+	$(MAKE) CC=$(TC32)clang CXX=$(TC32)clang++ sys=android-arm32 -C libs
+
+.PHONY: clean-libs
+clean-libs: clean-libs64 clean-libs32
+
+.PHONY: clean-libs64
+clean-libs64:
+	$(MAKE) sys=android-arm64 -C libs clean
+
+.PHONY: clean-libs32
+clean-libs32:
+	$(MAKE) sys=android-arm32 -C libs clean
+
+.PHONY: install
+install: $(name).apk
+	adb install -r $(name).apk
+
+.PHONY: uninstall
+uninstall:
+	adb uninstall $(pkg)
+
+.PHONY: run
+run:
+	adb shell am start -n $(pkg)/$(act)
+
+.PHONY: stop
+stop:
+	adb shell am force-stop $(pkg)
+
+.PHONY: logcat
+logcat:
+	adb logcat $(name):V AndroidRuntime:V DEBUG:V '*:S'
