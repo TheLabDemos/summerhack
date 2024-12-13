@@ -33,7 +33,7 @@ jobs:
           pkg install -y gmake mesa-libs sdl
           gmake
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: summerhack-freebsd
         path: |

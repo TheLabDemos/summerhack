@@ -33,7 +33,7 @@ jobs:
     - name: build demo
       run: make
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: summerhack-gnulinux
         path: |
